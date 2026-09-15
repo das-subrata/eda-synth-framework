@@ -1,0 +1,24 @@
+# Read the Liberty file
+read_liberty -ignore_miss_func /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Read PicoRV32 RTL (plain Verilog - no SystemVerilog needed)
+read_verilog /home/subrata/projects/picorv32/picorv32.v
+
+# Elaborate
+hierarchy -check -top picorv32
+
+# Generic synthesis
+synth -top picorv32
+
+# Map to sky130 cells
+dfflibmap -liberty /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Clean up
+clean
+
+# Write output netlist
+write_verilog synth-flow/outputs/picorv32_netlist.v
+
+# Print statistics
+stat -liberty /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib

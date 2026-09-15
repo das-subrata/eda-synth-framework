@@ -1,0 +1,5 @@
+*.log
+synth-flow/outputs/*.v
+__pycache__/
+*.pyc
+.DS_Store
