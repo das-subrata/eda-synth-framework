@@ -4,3 +4,7 @@ __pycache__/
 .DS_Store
 .history_sta
 synth-flow/outputs/*.v
+outputs/
+logs/
+run.log
+venv/

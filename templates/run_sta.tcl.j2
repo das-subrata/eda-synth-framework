@@ -1,0 +1,21 @@
+# Auto-generated STA script
+# Design: {{ design_name }}
+
+read_liberty {{ liberty_file }}
+read_verilog {{ output_netlist }}
+link_design {{ top_module }}
+read_sdc {{ output_sdc }}
+
+report_wns
+report_tns
+
+report_checks -path_delay max \
+              -fields {slew cap input nets fanout} \
+              -group_count 10 \
+              > {{ output_timing_report }}
+
+report_checks -path_delay max \
+              -fields {slew cap input nets fanout} \
+              -group_count 5
+
+exit

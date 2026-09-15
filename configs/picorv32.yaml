@@ -1,0 +1,24 @@
+# PicoRV32 RISC-V Processor - Design Configuration
+design_name: picorv32
+top_module: picorv32
+
+# RTL source files
+rtl_files:
+  - /home/subrata/projects/picorv32/picorv32.v
+
+# Library
+liberty_file: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Timing constraints
+clock_port: clk
+clock_period_ns: 20.0
+clock_uncertainty_setup: 0.5
+clock_uncertainty_hold: 0.2
+
+# Input/output delay (ns)
+input_delay_max: 2.0
+output_delay_max: 2.0
+
+# False paths (async signals)
+false_path_ports:
+  - resetn

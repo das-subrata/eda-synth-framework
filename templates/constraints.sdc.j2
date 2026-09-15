@@ -1,0 +1,17 @@
+# Auto-generated SDC constraints
+# Design: {{ design_name }}
+# Clock period: {{ clock_period_ns }} ns
+
+create_clock -name clk \
+             -period {{ clock_period_ns }} \
+             [get_ports {{ clock_port }}]
+
+set_clock_uncertainty -setup {{ clock_uncertainty_setup }} [get_clocks clk]
+set_clock_uncertainty -hold  {{ clock_uncertainty_hold }}  [get_clocks clk]
+
+set_input_delay  -max {{ input_delay_max }}  -clock clk [all_inputs]
+set_output_delay -max {{ output_delay_max }} -clock clk [all_outputs]
+
+{% for port in false_path_ports %}
+set_false_path -from [get_ports {{ port }}]
+{% endfor %}
