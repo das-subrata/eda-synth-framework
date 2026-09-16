@@ -78,7 +78,7 @@ The framework generates an interactive HTML dashboard showing:
 - Maximum frequency per design
 - Full run history table with color-coded status
 
-![QoR Dashboard](docs/dashboard_screenshot.png)
+**[View Live Interactive Dashboard](https://das-subrata.github.io/eda-synth-framework/dashboard.html)**
 
 ## How This Maps to Commercial EDA Flows
 
