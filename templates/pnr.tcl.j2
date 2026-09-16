@@ -1,0 +1,120 @@
+# Auto-generated OpenROAD P&R script
+# Design: {{ design_name }}
+# Generated: {{ timestamp }}
+
+# ----------------------------------------------------------------
+# 1. Read technology and cell LEF files
+# ----------------------------------------------------------------
+read_lef {{ tech_lef }}
+read_lef {{ cell_lef }}
+
+# ----------------------------------------------------------------
+# 2. Read Liberty file for timing
+# ----------------------------------------------------------------
+read_liberty {{ liberty_file }}
+
+# ----------------------------------------------------------------
+# 3. Read synthesized gate-level netlist
+# ----------------------------------------------------------------
+read_verilog {{ input_netlist }}
+link_design {{ top_module }}
+
+# ----------------------------------------------------------------
+# 4. Read timing constraints
+# ----------------------------------------------------------------
+read_sdc {{ input_sdc }}
+
+# ----------------------------------------------------------------
+# 5. Floorplan
+# ----------------------------------------------------------------
+initialize_floorplan \
+    -utilization {{ core_utilization * 100 | int }} \
+    -aspect_ratio {{ core_aspect_ratio }} \
+    -core_space {{ core_margin_um }} \
+    -site unithd
+
+# ----------------------------------------------------------------
+# 6. Create routing tracks then place IO pins
+# ----------------------------------------------------------------
+source /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/make_tracks.tcl
+place_pins -hor_layers met3 -ver_layers met2
+
+# ----------------------------------------------------------------
+# 7. Power Distribution Network (PDN)
+# ----------------------------------------------------------------
+add_global_connection -net VDD -pin_pattern "^VPB$" -power
+add_global_connection -net VDD -pin_pattern "^VPWR$" -power
+add_global_connection -net VSS -pin_pattern "^VNB$" -ground
+add_global_connection -net VSS -pin_pattern "^VGND$" -ground
+
+pdngen
+
+# ----------------------------------------------------------------
+# 8. Global Placement
+# ----------------------------------------------------------------
+global_placement -density {{ core_utilization + 0.1 }}
+
+# ----------------------------------------------------------------
+# 9. Repair design (buffer insertion for timing/slew)
+# ----------------------------------------------------------------
+estimate_parasitics -placement
+repair_design
+
+# ----------------------------------------------------------------
+# 10. Detailed Placement
+# ----------------------------------------------------------------
+detailed_placement
+check_placement -verbose
+
+# ----------------------------------------------------------------
+# 11. Clock Tree Synthesis (CTS)
+# ----------------------------------------------------------------
+clock_tree_synthesis \
+    -buf_list "sky130_fd_sc_hd__clkbuf_2 sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8"
+
+repair_timing -hold
+
+# ----------------------------------------------------------------
+# 12. Detailed Placement after CTS
+# ----------------------------------------------------------------
+detailed_placement
+
+# ----------------------------------------------------------------
+# 12b. Set wire RC for timing estimation
+# ----------------------------------------------------------------
+set_wire_rc -signal -layer met2
+set_wire_rc -clock  -layer met3
+
+# ----------------------------------------------------------------
+# 13. Global Routing
+# ----------------------------------------------------------------
+set_routing_layers -signal met1-met5 -clock met3-met5
+global_route -guide_file {{ output_route_guide }}
+
+# ----------------------------------------------------------------
+# 14. Repair timing post-global-route
+# ----------------------------------------------------------------
+estimate_parasitics -global_routing
+repair_timing
+
+# ----------------------------------------------------------------
+# 15. Detailed Routing
+# ----------------------------------------------------------------
+detailed_route -output_drc {{ output_drc_report }} \
+               -verbose 1
+
+# ----------------------------------------------------------------
+# 16. Reports
+# ----------------------------------------------------------------
+report_wns
+report_tns
+report_design_area
+
+# ----------------------------------------------------------------
+# 17. Write outputs
+# ----------------------------------------------------------------
+write_def {{ output_def }}
+write_verilog {{ output_netlist }}
+
+puts "P&R complete for {{ design_name }}"
+exit
