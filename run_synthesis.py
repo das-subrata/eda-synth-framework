@@ -30,6 +30,7 @@ from jinja2 import Environment, FileSystemLoader
 # Add scripts/ to path so we can import parse_qor
 sys.path.insert(0, str(Path(__file__).parent / "scripts"))
 from parse_qor import parse_yosys_log, parse_sta_log, print_qor_summary
+from qor_database import insert_run, print_runs_table
 
 
 # ── Paths ──────────────────────────────────────────────────────────────────
@@ -201,6 +202,7 @@ def main():
         "critical_path_ns": None, "status": "SKIPPED"
     }
 
+    run_id = insert_run(args.design, cfg["clock_period_ns"], synth_metrics, sta_metrics)
     print_qor_summary(
         args.design,
         synth_metrics,

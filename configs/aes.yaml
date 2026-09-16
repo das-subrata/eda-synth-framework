@@ -1,0 +1,30 @@
+# AES-128 Encryption Core - Design Configuration
+design_name: aes
+top_module: aes
+
+# RTL source files (order matters - dependencies first)
+rtl_files:
+  - /home/subrata/projects/aes/src/rtl/aes_sbox.v
+  - /home/subrata/projects/aes/src/rtl/aes_inv_sbox.v
+  - /home/subrata/projects/aes/src/rtl/aes_key_mem.v
+  - /home/subrata/projects/aes/src/rtl/aes_encipher_block.v
+  - /home/subrata/projects/aes/src/rtl/aes_decipher_block.v
+  - /home/subrata/projects/aes/src/rtl/aes_core.v
+  - /home/subrata/projects/aes/src/rtl/aes.v
+
+# Library
+liberty_file: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+
+# Timing constraints
+clock_port: clk
+clock_period_ns: 20.0
+clock_uncertainty_setup: 0.5
+clock_uncertainty_hold: 0.2
+
+# Input/output delay (ns)
+input_delay_max: 2.0
+output_delay_max: 2.0
+
+# False paths (async signals)
+false_path_ports:
+  - reset_n
