@@ -1,0 +1,30 @@
+# Multi-Corner Configuration for SkyWater 130nm
+# Uses OCV derating to simulate SS/TT/FF from TT Liberty
+# Standard industry practice when only TT corner is available
+
+corners:
+  - name: SS_100C_1v60
+    description: "Slow-slow corner (high temp, low voltage) - worst setup"
+    liberty: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+    # Derate: slow cells by 15%, fast clock by -5% -> stresses setup
+    cell_delay_derate_setup: 1.15
+    cell_delay_derate_hold:  0.95
+    clock_derate:            0.95
+    analysis_type: setup
+
+  - name: TT_025C_1v80
+    description: "Typical-typical corner (nominal) - both setup and hold"
+    liberty: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+    cell_delay_derate_setup: 1.00
+    cell_delay_derate_hold:  1.00
+    clock_derate:            1.00
+    analysis_type: both
+
+  - name: FF_n40C_1v95
+    description: "Fast-fast corner (low temp, high voltage) - worst hold"
+    liberty: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+    # Derate: fast cells by -10%, fast clock by +5% -> stresses hold
+    cell_delay_derate_setup: 0.90
+    cell_delay_derate_hold:  1.10
+    clock_derate:            1.05
+    analysis_type: hold

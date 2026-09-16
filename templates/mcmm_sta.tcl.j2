@@ -1,0 +1,54 @@
+# Auto-generated MCMM STA script
+# Design: {{ design_name }}
+# Corner: {{ corner.name }}
+# Generated: {{ timestamp }}
+
+# ----------------------------------------------------------------
+# 1. Read Liberty
+# ----------------------------------------------------------------
+read_liberty {{ corner.liberty }}
+
+# ----------------------------------------------------------------
+# 2. Read netlist
+# ----------------------------------------------------------------
+read_verilog {{ input_netlist }}
+link_design {{ top_module }}
+
+# ----------------------------------------------------------------
+# 3. Read constraints
+# ----------------------------------------------------------------
+read_sdc {{ input_sdc }}
+
+# ----------------------------------------------------------------
+# 4. Apply OCV derating for this corner
+# ----------------------------------------------------------------
+set_timing_derate -early {{ corner.cell_delay_derate_hold }}
+set_timing_derate -late  {{ corner.cell_delay_derate_setup }}
+
+# ----------------------------------------------------------------
+# 5. Setup analysis
+# ----------------------------------------------------------------
+report_wns
+report_tns
+
+report_checks -path_delay max \
+              -fields {slew cap input nets fanout} \
+              -group_count 5
+
+# ----------------------------------------------------------------
+# 6. Hold analysis
+# ----------------------------------------------------------------
+report_checks -path_delay min \
+              -fields {slew cap input nets fanout} \
+              -group_count 3
+
+# ----------------------------------------------------------------
+# 7. Save detailed report
+# ----------------------------------------------------------------
+report_checks -path_delay max \
+              -fields {slew cap input nets fanout} \
+              -group_count 20 \
+              > {{ output_timing_report }}
+
+puts "Corner {{ corner.name }} complete"
+exit
