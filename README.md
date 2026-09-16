@@ -15,19 +15,20 @@ development environments.
 | Plotly | QoR Dashboard | Internal reporting tools |
 
 ## Framework Architecture
-run_synthesis.py # Single-command flow orchestrator
-├── configs/ # Per-design YAML configuration
-│ ├── picorv32.yaml # RISC-V processor
-│ └── aes.yaml # AES-128 encryption core
-├── templates/ # Jinja2 templates (auto-generate tool scripts)
-│ ├── synthesize.ys.j2 # Yosys synthesis script
-│ ├── constraints.sdc.j2# SDC timing constraints
-│ └── run_sta.tcl.j2 # OpenSTA timing analysis script
+```text
+run_synthesis.py           # Single-command flow orchestrator
+├── configs/               # Per-design YAML configuration
+│   ├── picorv32.yaml      # RISC-V processor
+│   └── aes.yaml           # AES-128 encryption core
+├── templates/             # Jinja2 templates
+│   ├── synthesize.ys.j2   # Yosys synthesis script
+│   ├── constraints.sdc.j2 # SDC timing constraints
+│   └── run_sta.tcl.j2     # OpenSTA timing analysis
 └── scripts/
-├── parse_qor.py # Log parser: WNS/TNS/area/cells
-├── qor_database.py # SQLite QoR run tracking
-└── gen_dashboard.py # Plotly HTML dashboard generator
-
+    ├── parse_qor.py        # Log parser: WNS/TNS/area/cells
+    ├── qor_database.py     # SQLite QoR run tracking
+    └── gen_dashboard.py    # Plotly HTML dashboard
+```
 ## Quick Start
 
 ```bash
