@@ -16,6 +16,9 @@ hierarchy -check -top {{ top_module }}
 # Generic synthesis
 synth -top {{ top_module }}
 
+# Flatten hierarchy before mapping (required for P&R)
+flatten
+
 # Map to standard cells
 dfflibmap -liberty {{ liberty_file }}
 abc -liberty {{ liberty_file }}

@@ -28,3 +28,11 @@ output_delay_max: 2.0
 # False paths (async signals)
 false_path_ports:
   - reset_n
+  - reset_n
+
+# P&R settings
+tech_lef: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd.tlef
+cell_lef: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef
+core_utilization: 0.45
+core_aspect_ratio: 1.0
+core_margin_um: 10.0

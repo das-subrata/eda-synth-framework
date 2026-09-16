@@ -42,10 +42,25 @@ place_pins -hor_layers met3 -ver_layers met2
 # ----------------------------------------------------------------
 # 7. Power Distribution Network (PDN)
 # ----------------------------------------------------------------
-add_global_connection -net VDD -pin_pattern "^VPB$" -power
-add_global_connection -net VDD -pin_pattern "^VPWR$" -power
-add_global_connection -net VSS -pin_pattern "^VNB$" -ground
-add_global_connection -net VSS -pin_pattern "^VGND$" -ground
+add_global_connection -net VDD -pin_pattern "^VPB$"   -power
+add_global_connection -net VDD -pin_pattern "^VPWR$"  -power
+add_global_connection -net VDD -pin_pattern "^VDD$"   -power
+add_global_connection -net VSS -pin_pattern "^VNB$"   -ground
+add_global_connection -net VSS -pin_pattern "^VGND$"  -ground
+add_global_connection -net VSS -pin_pattern "^VSS$"   -ground
+add_global_connection -net VSS -pin_pattern "^zero_$" -ground
+add_global_connection -net VDD -pin_pattern "^one_$"  -power
+
+global_connect
+
+# Handle internally-generated constant nets
+set block [ord::get_db_block]
+foreach net_name {one_ zero_} {
+    set net [$block findNet $net_name]
+    if {$net != "NULL"} {
+        $net setSpecial
+    }
+}
 
 pdngen
 
