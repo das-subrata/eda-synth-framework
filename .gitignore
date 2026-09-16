@@ -1,12 +1,21 @@
-*.log
-__pycache__/
-*.pyc
-.DS_Store
-.history_sta
-synth-flow/outputs/*.v
+# Tool outputs
 outputs/
 logs/
-run.log
-venv/
 results/
 dashboard/
+run.log
+*.log
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Large generated files
+synth-flow/outputs/
+synth-flow/logs/
+timing-analysis/logs/
+
+# Editor/OS
+.DS_Store
+.history_sta

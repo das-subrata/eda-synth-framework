@@ -1,0 +1,8 @@
+# EDA Synthesis Flow Automation Framework
+# Install with: pip install -r requirements.txt
+
+jinja2>=3.1.0       # Tcl/SDC script generation from templates
+pyyaml>=6.0.0       # Design configuration files
+plotly>=5.0.0       # Interactive QoR dashboard
+pandas>=1.5.0       # Data manipulation for QoR analysis
+tabulate>=0.9.0     # Terminal QoR summary tables
