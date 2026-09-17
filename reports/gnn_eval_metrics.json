@@ -1,0 +1,34 @@
+{
+  "note": "GNN trained on gcd only (1 graph). XGBoost trained on augmented QoR DB.",
+  "designs": [
+    {
+      "design": "gcd",
+      "split": "train",
+      "actual": 13.59000015258789,
+      "gnn_pred": 11.3251,
+      "xgb_pred": 0.5555,
+      "gnn_mae": 2.2649,
+      "xgb_mae": 13.0345
+    },
+    {
+      "design": "picorv32",
+      "split": "test",
+      "actual": -0.1599999964237213,
+      "gnn_pred": 9.9591,
+      "xgb_pred": -0.5466,
+      "gnn_mae": 10.1191,
+      "xgb_mae": 0.3866
+    },
+    {
+      "design": "aes",
+      "split": "train",
+      "actual": null,
+      "gnn_pred": 9.4071,
+      "xgb_pred": 0.5758,
+      "gnn_mae": null,
+      "xgb_mae": null
+    }
+  ],
+  "gnn_mean_mae_ns": 6.192,
+  "xgb_mean_mae_ns": 6.7106
+}
