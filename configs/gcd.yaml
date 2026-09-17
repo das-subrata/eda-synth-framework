@@ -31,3 +31,6 @@ false_path_ports:
 core_utilization: 0.40
 core_aspect_ratio: 1.0
 core_margin_um: 10.0
+
+# Synthesis effort
+synth_effort: medium

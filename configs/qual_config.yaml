@@ -1,0 +1,33 @@
+# Tool Qualification Configuration
+# Simulates comparing two tool versions by using different
+# optimization effort levels (medium vs high)
+# In industry: replace with actual tool version paths
+
+qualification:
+  reference:
+    name: "yosys_effort_medium"
+    description: "Yosys synthesis - medium effort (reference)"
+    synth_effort: medium
+
+  candidate:
+    name: "yosys_effort_high"
+    description: "Yosys synthesis - high effort (candidate)"
+    synth_effort: high
+
+# Acceptance criteria - fail if any threshold is exceeded
+acceptance_criteria:
+  max_wns_regression_ns: 0.010    # WNS must not degrade > 10ps
+  max_area_increase_pct: 5.0      # Area must not increase > 5%
+  max_power_increase_pct: 5.0     # Power must not increase > 5%
+  max_runtime_increase_pct: 50.0  # Runtime must not increase > 50%
+  max_wns_variance_ps: 2.0        # Reproducibility: WNS variance < 2ps
+  require_zero_drc: true          # DRC must always be zero
+
+# Test designs
+test_designs:
+  - picorv32
+  - aes
+  - gcd
+
+# Reproducibility: number of runs per design
+reproducibility_runs: 3

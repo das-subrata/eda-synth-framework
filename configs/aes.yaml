@@ -36,3 +36,6 @@ cell_lef: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/l
 core_utilization: 0.45
 core_aspect_ratio: 1.0
 core_margin_um: 10.0
+
+# Synthesis effort
+synth_effort: medium

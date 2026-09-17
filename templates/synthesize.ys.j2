@@ -21,7 +21,11 @@ flatten
 
 # Map to standard cells
 dfflibmap -liberty {{ liberty_file }}
+{% if synth_effort == 'high' %}
+abc -liberty {{ liberty_file }} -D {{ (clock_period_ns * 1000) | int }}
+{% else %}
 abc -liberty {{ liberty_file }}
+{% endif %}
 
 # Clean up
 clean

@@ -19,3 +19,4 @@ timing-analysis/logs/
 # Editor/OS
 .DS_Store
 .history_sta
+qual_results/*.log

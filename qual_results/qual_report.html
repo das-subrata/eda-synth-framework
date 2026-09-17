@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FlowMind Tool Qualification Report</title>
+<meta charset="utf-8">
+<style>
+  body { font-family: -apple-system, sans-serif;
+          margin: 0; padding: 20px; background: #f5f5f5; }
+  h1 { color: #1f77b4; border-bottom: 2px solid #1f77b4;
+        padding-bottom: 8px; }
+  h2 { color: #444; margin-top: 30px; }
+  .verdict { font-size: 2em; font-weight: bold;
+               color: #28a745; margin: 20px 0; }
+  .meta { background: white; padding: 15px; border-radius: 8px;
+            margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  table { width: 100%; border-collapse: collapse;
+            background: white; border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  th { background: #1f77b4; color: white; padding: 10px;
+        text-align: left; }
+  td { padding: 8px 10px; border-bottom: 1px solid #eee; }
+  .summary { display: grid; grid-template-columns: repeat(3,1fr);
+               gap: 15px; margin: 15px 0; }
+  .card { background: white; border-radius: 8px; padding: 15px;
+            text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .num { font-size: 2em; font-weight: bold; color: #1f77b4; }
+</style>
+</head>
+<body>
+<h1>FlowMind Tool Qualification Report</h1>
+<div class="meta">
+  <b>Generated:</b> 2026-09-16 20:02:36<br>
+  <b>Reference:</b> yosys_effort_medium —
+    Yosys synthesis - medium effort (reference)<br>
+  <b>Candidate:</b> yosys_effort_high —
+    Yosys synthesis - high effort (candidate)<br>
+  <b>Designs tested:</b> gcd, picorv32
+</div>
+
+<div class="verdict">Overall: PASS</div>
+
+<div class="summary">
+  <div class="card"><div class="num">6</div>
+    <div>Total Checks</div></div>
+  <div class="card"><div class="num" style="color:#28a745">6</div>
+    <div>Passed</div></div>
+  <div class="card"><div class="num" style="color:#dc3545">0</div>
+    <div>Failed</div></div>
+</div>
+
+<h2>PPA Comparison</h2>
+<table>
+  <tr>
+    <th>Design</th>
+    <th>WNS Ref (ns)</th><th>WNS Cand (ns)</th>
+    <th>Area Ref (µm²)</th><th>Area Cand (µm²)</th>
+    <th>Runtime Ref</th><th>Runtime Cand</th>
+  </tr>
+  
+        <tr>
+            <td><b>gcd</b></td>
+            <td>0.000</td>
+            <td>0.000 (+0.000ns)</td>
+            <td>2073</td>
+            <td>2073 (+0.0%)</td>
+            <td>1.3s</td>
+            <td>1.4s</td>
+        </tr>
+        <tr>
+            <td><b>picorv32</b></td>
+            <td>0.000</td>
+            <td>0.000 (+0.000ns)</td>
+            <td>77250</td>
+            <td>77250 (+0.0%)</td>
+            <td>5.0s</td>
+            <td>5.7s</td>
+        </tr>
+</table>
+
+<h2>Qualification Checks</h2>
+<table>
+  <tr><th>Check</th><th>Result</th><th>Detail</th></tr>
+  
+        <tr style="background:#d4edda">
+            <td>✓ gcd: WNS delta</td>
+            <td><b>PASS</b></td>
+            <td style="font-family:monospace;font-size:0.85em">ref=0.000ns cand=0.000ns delta=+0.000ns (limit: -0.01ns)</td>
+        </tr>
+        <tr style="background:#d4edda">
+            <td>✓ gcd: Area delta</td>
+            <td><b>PASS</b></td>
+            <td style="font-family:monospace;font-size:0.85em">ref=2073 cand=2073 delta=+0.0% (limit: +5.0%)</td>
+        </tr>
+        <tr style="background:#d4edda">
+            <td>✓ gcd: Runtime delta</td>
+            <td><b>PASS</b></td>
+            <td style="font-family:monospace;font-size:0.85em">ref=1.3s cand=1.4s delta=+4.4% (limit: +50.0%)</td>
+        </tr>
+        <tr style="background:#d4edda">
+            <td>✓ picorv32: WNS delta</td>
+            <td><b>PASS</b></td>
+            <td style="font-family:monospace;font-size:0.85em">ref=0.000ns cand=0.000ns delta=+0.000ns (limit: -0.01ns)</td>
+        </tr>
+        <tr style="background:#d4edda">
+            <td>✓ picorv32: Area delta</td>
+            <td><b>PASS</b></td>
+            <td style="font-family:monospace;font-size:0.85em">ref=77250 cand=77250 delta=+0.0% (limit: +5.0%)</td>
+        </tr>
+        <tr style="background:#d4edda">
+            <td>✓ picorv32: Runtime delta</td>
+            <td><b>PASS</b></td>
+            <td style="font-family:monospace;font-size:0.85em">ref=5.0s cand=5.7s delta=+14.1% (limit: +50.0%)</td>
+        </tr>
+</table>
+</body>
+</html>
