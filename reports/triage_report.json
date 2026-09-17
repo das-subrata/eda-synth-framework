@@ -1,0 +1,36 @@
+{
+  "query": "WNS violation timing slack",
+  "top_k": 5,
+  "results": [
+    {
+      "score": 0.3677,
+      "source": "outputs/gcd/timing_FF_n40C_1v95.rpt",
+      "lines": "1141-1144",
+      "excerpt": "---------------------------------------------------------------------------- 16.22 slack (MET)"
+    },
+    {
+      "score": 0.2305,
+      "source": "qual_run.log",
+      "lines": "1-20",
+      "excerpt": "============================================================ FlowMind TOOL QUALIFICATION SUITE Reference : yosys_effort_medium Candidate : yosys_effort_high Designs : gcd, picorv32 ============================================================ [gcd] Running reference configuration... Run 1: WNS=0.0\u2026"
+    },
+    {
+      "score": 0.215,
+      "source": "logs/gcd/pnr.log",
+      "lines": "561-568",
+      "excerpt": "[INFO DRT-0267] cpu time = 00:00:26, elapsed time = 00:00:26, memory = 577.30 (MB), peak = 576.97 (MB) [INFO DRT-0180] Post processing. wns max 0.00 tns max 0.00 Design area 2431 um^2 42% utilization. P&R complete for gcd"
+    },
+    {
+      "score": 0.2054,
+      "source": "logs/picorv32/pnr.log",
+      "lines": "2361-2376",
+      "excerpt": "li1 23751 met1 27070 met2 3269 met3 249 met4 12 ------------------------ 54351 [INFO DRT-0267] cpu time = 00:46:27, elapsed time = 07:58:11, memory = 1799.75 (MB), peak = 1798.98 (MB) [INFO DRT-0180] Post processing. wns max 0.00 tns max 0.00 Design area 80609 um^2 42% utilization. P&R complete for\u2026"
+    },
+    {
+      "score": 0.1989,
+      "source": "signoff_gcd.log",
+      "lines": "1241-1260",
+      "excerpt": "-0.55 data arrival time ---------------------------------------------------------------------------- 0.46 slack (MET) Corner FF_n40C_1v95 complete Saving command history ============================================================ MCMM SIGNOFF SUMMARY: gcd Clock period: 20.0 ns\u2026"
+    }
+  ]
+}

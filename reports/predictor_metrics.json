@@ -1,0 +1,25 @@
+{
+  "cv_mae_mean_ns": 0.9664,
+  "cv_mae_std_ns": 0.3066,
+  "cv_r2_mean": 0.9152,
+  "cv_r2_std": 0.0712,
+  "n_real_runs": 6,
+  "n_synthetic": 150,
+  "features": [
+    "cell_count",
+    "chip_area_um2",
+    "seq_pct",
+    "clock_period_ns",
+    "design_enc",
+    "area_per_cell"
+  ],
+  "feature_importance": {
+    "cell_count": 0.3079,
+    "chip_area_um2": 0.1158,
+    "seq_pct": 0.324,
+    "clock_period_ns": 0.1128,
+    "design_enc": 0.0217,
+    "area_per_cell": 0.1178
+  },
+  "note": "Synthetic augmentation (\u00b15% Gaussian noise) used to expand small dataset of real EDA runs."
+}

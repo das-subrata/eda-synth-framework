@@ -20,3 +20,6 @@ timing-analysis/logs/
 .DS_Store
 .history_sta
 qual_results/*.log
+.triage_index.pkl
+.chromadb/
+models/*.pkl
