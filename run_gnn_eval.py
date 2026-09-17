@@ -65,22 +65,27 @@ def load_xgb():
         return pickle.load(f)
 
 def xgb_predict(bundle: dict, design: str, clock_ns: float) -> float:
-    """Reconstruct features from graph stats + design identity."""
     import sqlite3, pandas as pd
     conn = sqlite3.connect(ROOT / "results/qor_runs.db")
     df   = pd.read_sql("SELECT * FROM runs", conn); conn.close()
-    df   = df.drop_duplicates(subset=["design_name","clock_period_ns"])
-    row  = df[(df["design_name"] == design) &
-              (df["clock_period_ns"] == clock_ns)]
+    df   = df.drop_duplicates(subset=["design_name", "clock_period_ns"])
+
+    # Strip period suffix to get base design name (gcd_5ns → gcd)
+    base = design.split("_")[0] if "_" in design else design
+    # aes_orfs is a special case
+    if design.startswith("aes_orfs"):
+        base = "aes_orfs"
+
+    row = df[(df["design_name"] == base) &
+             (df["clock_period_ns"] == clock_ns)]
     if row.empty:
-        # fall back to any row for this design
-        row = df[df["design_name"] == design]
+        row = df[df["design_name"] == base]
     if row.empty:
         return float("nan")
     row = row.iloc[0]
 
     le  = bundle["label_encoder"]
-    enc = le.transform([design])[0] if design in le.classes_ else 0
+    enc = le.transform([base])[0] if base in le.classes_ else 0
     x   = np.array([[
         row["cell_count"],
         row["chip_area_um2"],
@@ -93,11 +98,19 @@ def xgb_predict(bundle: dict, design: str, clock_ns: float) -> float:
 
 # ── Build comparison table ────────────────────────────────────────────────────
 EVAL_DESIGNS = {
-    "gcd":      {"clock_ns": 20.0, "split": "train"},
-    "picorv32": {"clock_ns": 13.0, "split": "test"},
-    "aes":      {"clock_ns": 29.0, "split": "train"},
+    "gcd":             {"clock_ns": 20.0,  "split": "train"},
+    "gcd_5ns":         {"clock_ns": 5.0,   "split": "train"},
+    "gcd_8ns":         {"clock_ns": 8.0,   "split": "train"},
+    "uart":            {"clock_ns": 5.0,   "split": "train"},
+    "uart_4ns":        {"clock_ns": 4.0,   "split": "train"},
+    "uart_4p5ns":      {"clock_ns": 4.5,   "split": "train"},
+    "aes_orfs":        {"clock_ns": 10.0,  "split": "train"},
+    "aes_orfs_9ns":    {"clock_ns": 9.0,   "split": "train"},
+    "spi":             {"clock_ns": 1.5,   "split": "train"},
+    "spi_1p2ns":       {"clock_ns": 1.2,   "split": "train"},
+    "picorv32":        {"clock_ns": 13.0,  "split": "test"},
+    "aes":             {"clock_ns": 31.0,  "split": "train"},
 }
-
 def main():
     gnn_model  = load_gnn()
     xgb_bundle = load_xgb()

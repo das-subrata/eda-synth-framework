@@ -21,26 +21,33 @@ ROOT      = Path(__file__).parent
 NETLIST_D = ROOT / "ext5-gnn/netlists"
 OUT_DIR   = ROOT / "ext5-gnn/graphs"; OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+# Replace DESIGNS dict in run_gnn_prep.py
 DESIGNS = {
-    "gcd": {
-        "netlist": NETLIST_D / "gcd_flat.json",
-        "sta_rpt": ROOT / "outputs/gcd/timing_TT_025C_1v80.rpt",
-        "top":     "gcd",
-    },
-    "picorv32": {
-        "netlist": NETLIST_D / "picorv32_flat.json",
-        "sta_rpt": ROOT / "outputs/picorv32/timing_TT_025C_1v80.rpt",
-        "top":     "picorv32",
-    },
-    "aes": {
-        "netlist": NETLIST_D / "aes_flat.json",
-        "sta_rpt": ROOT / "outputs/aes/timing_TT_025C_1v80.rpt"
-                   if (ROOT / "outputs/aes/timing_TT_025C_1v80.rpt").exists()
-                   else None,
-        "top":     "aes",
-    },
+    # Original designs
+    "gcd":             {"netlist": NETLIST_D / "gcd_flat.json",      "sta_rpt": ROOT / "outputs/gcd/timing_TT_025C_1v80.rpt",          "top": "gcd"},
+    "picorv32":        {"netlist": NETLIST_D / "picorv32_flat.json",  "sta_rpt": ROOT / "outputs/picorv32/timing_TT_025C_1v80.rpt",      "top": "picorv32"},
+    "aes":             {"netlist": NETLIST_D / "aes_flat.json",       "sta_rpt":  ROOT / "outputs/aes/timing_TT_025C_1v80.rpt",                                                    "top": "aes"},
+    "uart":            {"netlist": NETLIST_D / "uart_flat.json",      "sta_rpt": ROOT / "outputs/uart/timing_TT_025C_1v80.rpt",          "top": "uart"},
+    "aes_orfs":        {"netlist": NETLIST_D / "aes_orfs_flat.json",  "sta_rpt": ROOT / "outputs/aes_orfs/timing_TT_025C_1v80.rpt",      "top": "aes_cipher_top"},
+    "spi":             {"netlist": NETLIST_D / "spi_flat.json",       "sta_rpt": ROOT / "outputs/spi/timing_TT_025C_1v80.rpt",           "top": "spi"},
+    # Multi-period GCD variants
+    "gcd_5ns":         {"netlist": NETLIST_D / "gcd_flat.json",       "sta_rpt": ROOT / "outputs/gcd_5ns/timing_TT_025C_1v80.rpt",       "top": "gcd"},
+    "gcd_8ns":         {"netlist": NETLIST_D / "gcd_flat.json",       "sta_rpt": ROOT / "outputs/gcd_8ns/timing_TT_025C_1v80.rpt",       "top": "gcd"},
+    "gcd_10ns":        {"netlist": NETLIST_D / "gcd_flat.json",       "sta_rpt": ROOT / "outputs/gcd_10ns/timing_TT_025C_1v80.rpt",      "top": "gcd"},
+    "gcd_15ns":        {"netlist": NETLIST_D / "gcd_flat.json",       "sta_rpt": ROOT / "outputs/gcd_15ns/timing_TT_025C_1v80.rpt",      "top": "gcd"},
+    # Multi-period UART variants
+    "uart_4ns":        {"netlist": NETLIST_D / "uart_flat.json",      "sta_rpt": ROOT / "outputs/uart_4ns/timing_TT_025C_1v80.rpt",      "top": "uart"},
+    "uart_4p5ns":      {"netlist": NETLIST_D / "uart_flat.json",      "sta_rpt": ROOT / "outputs/uart_4p5ns/timing_TT_025C_1v80.rpt",    "top": "uart"},
+    "uart_6ns":        {"netlist": NETLIST_D / "uart_flat.json",      "sta_rpt": ROOT / "outputs/uart_6ns/timing_TT_025C_1v80.rpt",      "top": "uart"},
+    # Multi-period AES_ORFS variants
+    "aes_orfs_9ns":    {"netlist": NETLIST_D / "aes_orfs_flat.json",  "sta_rpt": ROOT / "outputs/aes_orfs_9ns/timing_TT_025C_1v80.rpt",  "top": "aes_cipher_top"},
+    "aes_orfs_10p5ns": {"netlist": NETLIST_D / "aes_orfs_flat.json",  "sta_rpt": ROOT / "outputs/aes_orfs_10p5ns/timing_TT_025C_1v80.rpt","top": "aes_cipher_top"},
+    "aes_orfs_12ns":   {"netlist": NETLIST_D / "aes_orfs_flat.json",  "sta_rpt": ROOT / "outputs/aes_orfs_12ns/timing_TT_025C_1v80.rpt", "top": "aes_cipher_top"},
+    # Multi-period SPI variants
+    "spi_1p2ns":       {"netlist": NETLIST_D / "spi_flat.json",       "sta_rpt": ROOT / "outputs/spi_1p2ns/timing_TT_025C_1v80.rpt",     "top": "spi"},
+    "spi_1p8ns":       {"netlist": NETLIST_D / "spi_flat.json",       "sta_rpt": ROOT / "outputs/spi_1p8ns/timing_TT_025C_1v80.rpt",     "top": "spi"},
+    "spi_2p5ns":       {"netlist": NETLIST_D / "spi_flat.json",       "sta_rpt": ROOT / "outputs/spi_2p5ns/timing_TT_025C_1v80.rpt",     "top": "spi"},
 }
-
 SEQ_TYPES = {
     "$_DFF_P_", "$_DFF_N_", "$_DFFE_PP_", "$_DFFE_PN_",
     "$_DFFE_NP_", "$_DFFE_NN_", "$_DLATCH_P_", "$_DLATCH_N_",

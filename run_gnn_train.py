@@ -99,21 +99,22 @@ def evaluate(model, graphs: list[Data]) -> dict:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    # Load graphs
-    gcd      = add_batch(load_graph("gcd"))
-    picorv32 = add_batch(load_graph("picorv32"))
-    aes      = load_graph("aes")
+    # Load all graphs
+    all_designs = [
+        "gcd", "uart", "aes_orfs", "spi",
+        "gcd_5ns", "gcd_8ns", "gcd_10ns", "gcd_15ns",
+        "uart_4ns", "uart_4p5ns", "uart_6ns",
+        "aes_orfs_9ns", "aes_orfs_10p5ns", "aes_orfs_12ns",
+        "spi_1p2ns", "spi_1p8ns", "spi_2p5ns",
+    ]
+    # aes has no STA label — skip
+    train_graphs = [add_batch(load_graph(d)) for d in all_designs]
+    test_graphs  = [add_batch(load_graph("picorv32"))]
 
-    # Only use aes if it has a real WNS label
-    train_graphs = [gcd]
-    if aes.y.item() != 0.0:
-        train_graphs.append(add_batch(aes))
-        print("[train] Training on: gcd, aes")
-    else:
-        print("[train] Training on: gcd only (aes has no STA label)")
+    print(f"[train] Training on: {len(train_graphs)} graphs")
     print(f"[train] Test design: picorv32 (cross-design generalization)")
 
-    in_channels = gcd.x.shape[1]
+    in_channels = train_graphs[0].x.shape[1]
     model = TimingGNN(in_channels=in_channels, hidden=HIDDEN, num_layers=NUM_LAYERS)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
@@ -121,14 +122,13 @@ def main():
     print(f"[train] Model: {sum(p.numel() for p in model.parameters())} params  "
           f"in_channels={in_channels}  hidden={HIDDEN}  layers={NUM_LAYERS}")
 
-    # Training loop
     history = []
     for epoch in range(1, EPOCHS + 1):
         loss = train_epoch(model, optimizer, train_graphs)
         scheduler.step()
         if epoch % 50 == 0 or epoch == 1:
-            val = evaluate(model, train_graphs)
-            test = evaluate(model, [picorv32])
+            val  = evaluate(model, train_graphs)
+            test = evaluate(model, test_graphs)
             train_mae = np.mean([v["mae_ns"] for v in val.values()])
             test_mae  = test["picorv32"]["mae_ns"]
             print(f"  Epoch {epoch:3d}  loss={loss:.6f}  "
@@ -136,31 +136,29 @@ def main():
                   f"test_MAE(picorv32)={test_mae:.4f} ns")
         history.append(loss)
 
-    # Final evaluation
     print("\n── Final Evaluation ──────────────────────────────────────")
-    all_results = evaluate(model, train_graphs + [picorv32])
+    all_results = evaluate(model, train_graphs + test_graphs)
     for design, r in all_results.items():
-        split = "TRAIN" if design != "picorv32" else "TEST "
-        print(f"  [{split}] {design:12s}  "
+        split = "TEST " if design == "picorv32" else "TRAIN"
+        print(f"  [{split}] {design:14s}  "
               f"predicted={r['predicted_wns']:+.4f} ns  "
               f"actual={r['actual_wns']:+.4f} ns  "
               f"MAE={r['mae_ns']:.4f} ns")
 
-    # Save model
     model_path = MODEL_D / "gnn_slack.pt"
     torch.save({
-        "model_state": model.state_dict(),
-        "in_channels": in_channels,
-        "hidden":      HIDDEN,
-        "num_layers":  NUM_LAYERS,
-        "epoch":       EPOCHS,
+        "model_state":   model.state_dict(),
+        "in_channels":   in_channels,
+        "hidden":        HIDDEN,
+        "num_layers":    NUM_LAYERS,
+        "epoch":         EPOCHS,
+        "train_designs": all_designs,
     }, model_path)
     print(f"\n[train] Model saved → {model_path}")
 
-    # Save metrics
     metrics = {
         "architecture": {
-            "type":       "GraphSAGE",
+            "type":        "GraphSAGE",
             "in_channels": in_channels,
             "hidden":      HIDDEN,
             "num_layers":  NUM_LAYERS,
@@ -168,18 +166,17 @@ def main():
             "params":      sum(p.numel() for p in model.parameters()),
         },
         "training": {
-            "epochs":       EPOCHS,
-            "lr":           LR,
-            "train_designs": [g.design for g in train_graphs],
-            "test_design":  "picorv32",
+            "epochs":        EPOCHS,
+            "lr":            LR,
+            "train_designs": all_designs,
+            "test_design":   "picorv32",
         },
-        "results":  all_results,
+        "results":      all_results,
         "loss_history": [round(l, 6) for l in history],
     }
-    metrics_path = REPORT_D / "gnn_metrics.json"
-    with open(metrics_path, "w") as f:
+    with open(REPORT_D / "gnn_metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
-    print(f"[train] Metrics saved → {metrics_path}")
+    print(f"[train] Metrics saved → reports/gnn_metrics.json")
 
 if __name__ == "__main__":
     main()

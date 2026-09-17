@@ -1,0 +1,24 @@
+design_name: spi
+top_module: spi
+
+rtl_files:
+  - /home/subrata/projects/OpenROAD-flow-scripts/flow/designs/src/spi/spi.v
+
+liberty_file: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+tech_lef: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd.tlef
+cell_lef: /home/subrata/projects/OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef
+
+clock_port: clk
+clock_period_ns: 1.5
+clock_uncertainty_setup: 0.1
+clock_uncertainty_hold: 0.05
+input_delay_max: 0.15
+output_delay_max: 0.15
+
+false_path_ports:
+  - rst
+
+core_utilization: 0.40
+core_aspect_ratio: 1.0
+core_margin_um: 10.0
+synth_effort: medium

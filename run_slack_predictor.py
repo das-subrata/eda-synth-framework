@@ -30,6 +30,10 @@ def load_data() -> pd.DataFrame:
     df = pd.read_sql("SELECT * FROM runs ORDER BY id", conn)
     conn.close()
 
+    # Exclude picorv32 — held-out test design for fair cross-design comparison
+    df = df[df["design_name"] != "picorv32"].copy()
+    print(f"[predictor] Excluded picorv32 from training (held-out test design)")
+
     # Keep unique (design, clock_period) combinations
     df = df.drop_duplicates(subset=["design_name", "clock_period_ns"]).copy()
     print(f"[predictor] {len(df)} unique runs after dedup:")
