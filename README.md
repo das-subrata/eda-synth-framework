@@ -4,7 +4,7 @@
 
 FlowMind is a full-stack EDA flow automation framework built on open-source tools (Yosys, OpenSTA, OpenROAD, Sky130 PDK) that progressively layers machine learning onto a production-style RTL-to-signoff pipeline. It is structured as a sequence of extensions, each standing alone as a demonstrable result while collectively building toward a publishable GNN-based timing predictor.
 
-The central research question: **can a graph neural network trained on post-synthesis netlists predict worst-case timing slack before routing — and generalize to designs it has never seen?**
+The central research question: **can a graph neural network trained on post-synthesis netlists predict worst-case timing slack before routing and generalize to designs it has never seen?**
 
 ---
 
