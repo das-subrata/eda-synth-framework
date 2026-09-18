@@ -1,4 +1,4 @@
-# FlowMind: ML-Augmented EDA Flow Automation on Open-Source Tools
+# FlowMind: Pre-Route Timing Prediction via GraphSAGE on Post-Synthesis Netlists Using Open-Source EDA Tools
 
 > **Research portfolio** · Pre-route timing prediction with Graph Neural Networks · ISPD 2027 (in preparation)
 
