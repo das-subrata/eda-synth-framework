@@ -99,25 +99,35 @@ def evaluate(model, graphs: list[Data]) -> dict:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    # Load all graphs
+    # Load full graphs
     all_designs = [
         "gcd", "uart", "aes_orfs", "spi",
         "gcd_5ns", "gcd_8ns", "gcd_10ns", "gcd_15ns",
         "uart_4ns", "uart_4p5ns", "uart_6ns",
         "aes_orfs_9ns", "aes_orfs_10p5ns", "aes_orfs_12ns",
         "spi_1p2ns", "spi_1p8ns", "spi_2p5ns",
+        "aes",
     ]
-    # aes has no STA label — skip
     train_graphs = [add_batch(load_graph(d)) for d in all_designs]
-    test_graphs  = [add_batch(load_graph("picorv32"))]
 
-    print(f"[train] Training on: {len(train_graphs)} graphs")
-    print(f"[train] Test design: picorv32 (cross-design generalization)")
+    # Load subgraphs
+    subgraph_files = sorted(Path(GRAPH_D).glob("*_s[0-9]*.pt"))
+    for p in subgraph_files:
+        g = torch.load(p, weights_only=False)
+        g.batch = torch.zeros(g.num_nodes, dtype=torch.long)
+        train_graphs.append(g)
+
+    test_graphs = [add_batch(load_graph("picorv32"))]
+
+    print(f"[train] Training on: {len(all_designs)} full graphs + "
+          f"{len(subgraph_files)} subgraphs = {len(train_graphs)} total")
+    print(f"[train] Test design: picorv32")
 
     in_channels = train_graphs[0].x.shape[1]
     model = TimingGNN(in_channels=in_channels, hidden=HIDDEN, num_layers=NUM_LAYERS)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
+    scheduler = torch.optim.lr_scheduler.StepLR(
+        optimizer, step_size=100, gamma=0.5)
 
     print(f"[train] Model: {sum(p.numel() for p in model.parameters())} params  "
           f"in_channels={in_channels}  hidden={HIDDEN}  layers={NUM_LAYERS}")
@@ -134,8 +144,7 @@ def main():
             print(f"  Epoch {epoch:3d}  loss={loss:.6f}  "
                   f"train_MAE={train_mae:.4f} ns  "
                   f"test_MAE(picorv32)={test_mae:.4f} ns")
-        history.append(loss)
-
+        history.append(loss)   
     print("\n── Final Evaluation ──────────────────────────────────────")
     all_results = evaluate(model, train_graphs + test_graphs)
     for design, r in all_results.items():
